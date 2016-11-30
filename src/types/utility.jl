@@ -8,7 +8,6 @@ type LinearUtility{T<:Real} <: AbstractUtility
     nvar::Int64
 end
 
-
 Base.copy(m::LinearUtility) = LinearUtility([ copy(getfield(m, k)) for k = 1:length(fieldnames(m)) ]...)
 
 function LinearUtility{T<:Real}(Z::Vector{Vector{T}}, β::T)

@@ -1,4 +1,5 @@
-function seven(;N = 5, β = 0.95)
+#using DynamicProgramming
+function am(;N = 5, β = 0.95)
 	# Aguirregabiria & Mira
 	# 2 Model
 	truepar = [-1.9;1.;2.] # fixed costs, ..., entry costs
@@ -9,7 +10,11 @@ function seven(;N = 5, β = 0.95)
 
 	nX2 = N
 	X2 = 1:nX2
-	M = [zeros(nX2-1) eye(nX2-1, nX2-1); [1.0 zeros(1,nX2-1)]]
+	M = zeros(nX2, nX2)
+	p = [0.2, 0.6, 0.2]
+	M[1, 1:2] = [sum(p[1:2]), p[3]]
+	M[end, end-1:end] = [p[1], sum(p[2:3])]
+	M[2:end-1, :] = vcat([vcat(zeros(i-2), p, zeros(nX2-1-i))' for i = 2:nX2-1]...)
 
 	S = States(State(X1, F1),
 	           CommonState(X2, M))
@@ -22,3 +27,4 @@ function seven(;N = 5, β = 0.95)
 
     return U, S
 end
+#solve(am()...)

@@ -1,6 +1,6 @@
 function hitsch(;N = 15)
     n = [0, 2, 5]
-    next_i(i, k) = maximum(0, min(I, i+n[k]-1))
+    next_i(i, k) = max(0, min(I, i+n[k]-1))
 
     p = [0.6, 0.8, 1.] # FIX this
     F_P = [0.15 0.0 0.85; 0.0 0.25 0.75; 0.10 0.10 0.80]

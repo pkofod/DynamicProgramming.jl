@@ -4,7 +4,7 @@ T = BigFloat
 nX = 175
 n = nX
 o_maximum = 450
-Xval = linspace(0, o_maximum, nX)
+X = linspace(0, o_maximum, nX)
 p = T[0.0937; 0.4475; 0.4459; 0.0127; 0.0002];
 F1 = zeros(T, nX, nX)
 offset = -1
@@ -13,9 +13,9 @@ for i = 1:nX, j = 1:length(p)
     F1[i,i+offset+j] = i+offset+j == nX ? sum(p[j:end]) : p[j]
 end
 F = [F1, F1[ones(Int64, nX), :]]
-S = State(Xval, F)
+S = State(X, F)
 
-Z1 = [zeros(T, nX) -0.001*T.(Xval)]
+Z1 = [zeros(T, nX) -0.001*T.(X)]
 Z2 = [-ones(T, nX) zeros(T, nX)]
 U = LinearUtility([Z1, Z2], T(0.9), T[11.;2.5])
 

@@ -1,3 +1,4 @@
+using BenchmarkTools, ProgressMeter
 cd(Pkg.dir("DynamicProgramming")*"/src/examples/")
 function add_model!(m, s)
     f = include(s)

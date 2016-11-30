@@ -1,63 +1,48 @@
 abstract AbstractState
+
+"""
+Represents a discrete, finite state variable.
+"""
+type DiscreteState{Ta <: AbstractMatrix} <: AbstractState
+    X::AbstractVector
+    F::Vector{Ta}
+    nX::Int64
+end
+DiscreteState(X::AbstractVector, F::AbstractVector) = DiscreteState(X, F, length(X))
+
+# Helpers
+State(X::AbstractVector, F::AbstractVector) = DiscreteState(X, F)
+EntryState() = State([0.;1.],[[1. 0.; 1. 0.], [0. 1.; 0. 1.]])
+
+# Exogenous states that are common to all agents
+type CommonState{Ta <: AbstractMatrix} <: AbstractState
+    X::AbstractVector
+    F::Vector{Ta}
+    nX::Int64
+end
+CommonState(X, F) = CommonState(X, [F,], length(X)) # should be fixed!
+
+# Experimental
 immutable Terminator
     choices::AbstractVector
 end
 immutable TerminatorMatrix <: AbstractArray
 end
-"""
-    State(Xval, F)
 
-Constructs a State type instance with the fields
-
-- X
-- Xval
-- F
-- nX
-
-"""
-
-type State{Ta <: AbstractMatrix} <: AbstractState
-    X::Vector{Int64}
-    Xval::AbstractVector
-    F::Vector{Ta}
-    nX::Int64
-end
-
-State(Xval, F) = State([1:length(Xval);], Xval, F, length(Xval))
-
-
-type CommonState{Ta <: AbstractMatrix} <: AbstractState
-    X::Vector{Int64}
-    Xval::AbstractVector
-    F::Vector{Ta}
-    nX::Int64
-end
-
-CommonState(Xval, F) = CommonState([1:length(Xval);], Xval, [F,], length(Xval)) # should be fixed!
-
-
-type States{Tm <: AbstractMatrix, Tv<:AbstractVector} <: AbstractState
-    X::Vector{Int64}
+# The multivariate version of the individual states
+type DiscreteStates{Tm <: AbstractMatrix, Tv<:AbstractVector} <: AbstractState
     val_to_ind::Dict
     ind_to_val::Dict
-    Xval::Vector{Tv}
+    X::Vector{Tv}
     Fs::Vector{Union{Vector{Tm}}}
     F::Union{Vector{SparseMatrixCSC{Float64,Int64}}, Vector{Matrix{Float64}}}
     nX::Int64
     tup::Tuple
-    market::Vector{Int64}
+    market::Vector{Int64} # index of CommonStates #FIXME change to common
 end
-#States(S::State) = States(S.X, Vector[S.Xval], [S.F], S.F, S.nX, (S.nX,))
 
-"""
-helper function for States generator
-"""
-get_F(state::AbstractState, ia) = state.F[ia]
-get_F(state::CommonState, ia) = state.F[1]
-
-States(states::Union{State, CommonState}...) = States(nothing, states...)
-function States(terminators::Union{Void, Terminator}, states::Union{State, CommonState}...)
-    nA = maximum(ifelse(typeof(s) <: State, length(s.F), 1) for s in states)
+function DiscreteStates(terminators::Union{Void, Terminator}, states::Union{DiscreteState, CommonState}...)
+    nA = maximum(ifelse(typeof(s) <: AbstractState, length(s.F), 1) for s in states)
     F = [ones(1,1) for a = 1:nA]
     Fs = Vector{AbstractMatrix}[]
     lens = []
@@ -72,13 +57,21 @@ function States(terminators::Union{Void, Terminator}, states::Union{State, Commo
             F[ia] = kron(F[ia], get_F(state,ia))
         end
         push!(Fs, state.F)
-        push!(lens, length(state.Xval))
+        push!(lens, length(state.X))
     end
     tup = (reverse(lens)...)
     val_to_ind = Dict(reverse(ind2sub(tup, i)) => i for i = 1:n)
     ind_to_val = Dict(i => reverse(ind2sub(tup, i)) for i = 1:n)
-    States([1:n;], val_to_ind, ind_to_val, Vector{Float64}[state.Xval for state in states], Fs, F, n, tup, ind_market)
+    DiscreteStates(val_to_ind, ind_to_val, Vector{Float64}[state.X for state in states], Fs, F, n, tup, ind_market)
 end
 
+get_F(state::AbstractState, ia) = state.F[ia]
+get_F(state::CommonState, ia) = state.F[1]
 
-States(S::States) = S
+# Helper function
+States(states::Union{DiscreteState, CommonState}...) = DiscreteStates(nothing, states...)
+
+#
+
+# No-op States "constructor"
+States(S::DiscreteStates) = S
