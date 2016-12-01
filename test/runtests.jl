@@ -1,10 +1,10 @@
-using DynamicProgramming
+using MDPTools
 using Plots
 using Base.Test
 
 # write your own tests here
 problems = []
-examples_path = "$(Pkg.dir("DynamicProgramming"))"*"/examples/"
+examples_path = "$(Pkg.dir("MDPTools"))"*"/examples/"
 for filename in ("7Days.jl", "AM2010.jl", "AM2016-Tauchen.jl", "Dixit.jl", "Hitsch.jl", "Rust.jl")
     push!(problems, include(examples_path*filename))
 end
@@ -24,7 +24,7 @@ for problem in problems
     push!(vfi_iter, iter)
     println("* VFIs: ", iter)
     println("* Elapsed: ", the_time)
-    println("* Stopping criterion: ", DynamicProgramming.supnorm(W))
+    println("* Stopping criterion: ", MDPTools.supnorm(W))
     println()
     W = IntegratedValueFunction(S)
     the_time = @elapsed iter = solve!(U, S, W, Newton())
@@ -32,7 +32,7 @@ for problem in problems
     push!(newton_iter, iter)
     println("* Newton Iterations: ", iter)
     println("* Elapsed: ", the_time)
-    println("* Stopping criterion: ", DynamicProgramming.supnorm(W))
+    println("* Stopping criterion: ", MDPTools.supnorm(W))
     EV = ExpectedValueFunction(S)
     solve!(U, S, EV)
     EV = ExpectedValueFunction(S)

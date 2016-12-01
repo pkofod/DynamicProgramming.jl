@@ -1,5 +1,5 @@
 using BenchmarkTools, ProgressMeter
-cd(Pkg.dir("DynamicProgramming")*"/src/examples/")
+cd(Pkg.dir("MDPTools")*"/src/examples/")
 function add_model!(m, s)
     f = include(s)
     push!(m, f)

@@ -1,4 +1,4 @@
-using DynamicProgramming
+using MDPTools
 T = BigFloat
 # State space
 nX = 175

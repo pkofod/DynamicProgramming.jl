@@ -1,4 +1,4 @@
-using DynamicProgramming, Plots
+using MDPTools, Plots
 pgfplots()
 srand(124)
 

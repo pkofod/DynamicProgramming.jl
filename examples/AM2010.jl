@@ -1,4 +1,4 @@
-#using DynamicProgramming
+#using MDPTools
 function am(;N = 5, β = 0.95)
 	# Aguirregabiria & Mira
 	# 2 Model

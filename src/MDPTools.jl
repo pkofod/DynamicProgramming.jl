@@ -2,7 +2,7 @@
 # then a state or states without shock in combination
 # with an integrated value function would add it.
 
-module DynamicProgramming
+module MDPTools
 using StatsFuns, Distributions
         # Generic state(s)
 export  State, States,
