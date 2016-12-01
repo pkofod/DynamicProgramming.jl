@@ -23,14 +23,12 @@ function βEV!{T<:Real}(β::T, F, V)
         A_mul_B!(β, F[i], V.Vᵏ, zero(T), V.βEV[i])
     end
 end
-# In-place Discounted Expected Value Function Calculation for EV
 function βEV!{T<:Real}(β::T, F, EV::ExpectedValueFunction)
     for iA = 1:length(F)
         A_mul_B!(β, F[iA], EV.EVᵏ, zero(T), EV.βEV[iA])
     end
     mapreduce(maximum, max, EV.EVᵏ)
 end
-
 """
 Updates the choice probabilities given the provided value function.
 """

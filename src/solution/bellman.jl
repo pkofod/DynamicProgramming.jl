@@ -16,7 +16,7 @@ end
 # V.Vᵏ⁺¹ .= sum(exp.(U[i] + V.βEV[i] - maximum(V)) for i = 1:length(U)), but less readable
 
 function bellman!(U, F, β, V::IntegratedValueFunction)
-    copy!(V.Vᵏ,V.Vᵏ⁺¹)
+    copy!(previous(V),current(V))
     get_maximum!(V)
     βEV!(β, F, V)
     V.Vᵏ⁺¹ .= sum(exp.(U[i] + V.βEV[i] - maximum(V)) for i = 1:length(U))
@@ -37,5 +37,3 @@ function bellman!(U, F, β, EV::ExpectedValueFunction)
     end
     supnorm(EV)
 end
-
-bellman!(U, F, β, RV::RelativeValueFunction) = err("bellman! is currently not defined for RelativeValueFunction")

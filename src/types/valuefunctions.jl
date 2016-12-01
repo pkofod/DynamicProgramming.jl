@@ -42,20 +42,3 @@ ExpectedValueFunction(nX, nA, T=Float64) = ExpectedValueFunction([zeros(T, nX) f
 ExpectedValueFunction(S) = ExpectedValueFunction(S.nX, length(S.F))
 supnorm(EV::ExpectedValueFunction) = maximum([norm(EV.EVᵏ[iA] - EV.EVᵏ⁺¹[iA], Inf) for iA = 1:length(EV.EVᵏ)])
 get_maximum!(EV::ExpectedValueFunction) = copy!(EV.maximum, mapreduce(maximum, max, EV.EVᵏ))
-
-# Relative value function
-# TODO implement bellman! for relative value function
-immutable RelativeValueFunction{T<:Real}<:AbstractValueFunction
-    RVᵏ::Vector{Vector{T}}
-    RVᵏ⁺¹::Vector{Vector{T}}
-    βFP::Vector{Matrix{T}}
-    logsum::Vector{T}
-    maximum::Vector{T}
-end
-RelativeValueFunction(nX, nA, T=Float64) = RelativeValueFunction([zeros(T, nX) for i = 1:nA],
-                                                         [zeros(T, nX) for i = 1:nA],
-                                                         [zeros(T, nX, nX) for i = 1:nA],
-                                                         zeros(T, nX), [zero(T),])
-RelativeValueFunction(S) = RelativeValueFunction(S.nX, length(S.F))
-supnorm(RV::RelativeValueFunction) = maximum([norm(RV.RVᵏ[iA] - RV.RVᵏ⁺¹[iA], Inf) for iA = 1:length(RV.RVᵏ)])
-get_maximum!(RV::RelativeValueFunction) = copy!(RV.maximum, mapreduce(maximum, max, RV.RVᵏ))

@@ -36,5 +36,3 @@ function newton!(U, β, P, F, EV::ExpectedValueFunction, d)
         EV.EVᵏ⁺¹[ia] .= ev[(nX*(ia-1)+1):nX*ia]
     end
 end
-
-newton!(U, S, RV::RelativeValueFunction) = err("newton! is currently not defined for RelativeValueFunction")
