@@ -22,3 +22,7 @@ iterations are to be implemented in the future.
 This package can be used on its own, but is meant to be a backend for estimation
 packages yet to be announced: NestedFixedPoint.jl, NestedPseudoLikelihood.jl, MPEC.jl,
 and a meta package to reexport this and the other packages called StructuralEstimation.jl.
+
+This package is still in active development. Things will change, and the name is
+probably one of those things. DynamicProgramming is too broad, and I am considering
+MDPTools.jl. 

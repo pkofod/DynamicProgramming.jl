@@ -19,9 +19,10 @@ function am(;N = 5, β = 0.95)
 	S = States(State(X1, F1),
 	           CommonState(X2, M))
 
-	Z = [zeros(nX2*2, 3), # don't buy
-	             [-ones(nX2) log(X2) -ones(nX2); # buy
-				  -ones(nX2) log(X2)  zeros(nX2)]]
+	Z0 = zeros(nX2*2, 3) # don't buy
+	Z2 = [-ones(nX2) log(X2) -ones(nX2)] # buy 2
+	Z5 = [-ones(nX2) log(X2)  zeros(nX2)] # buy 5
+	Z = [Z0, Z2, Z5]
 
 	U = LinearUtility(Z, β, truepar)
 
