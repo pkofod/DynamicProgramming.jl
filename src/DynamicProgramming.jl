@@ -37,7 +37,6 @@ A_mul_B!(α, A, x, β, y) = copy!(y, β*y+α*(A*x))
 include("types/utility.jl")
 include("types/states.jl")
 include("types/valuefunctions.jl")
-include("types/solution.jl")
 
 # solution
 include("solution/misc.jl")
