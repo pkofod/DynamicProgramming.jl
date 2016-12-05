@@ -14,15 +14,19 @@ supnorm(V::AbstractValueFunction) = norm(V.Vᵏ - V.Vᵏ⁺¹, Inf)
 maximum(V::ValueFunction) = err("maximum not defined for ValueFunction.")
 
 # Integrated value function
-immutable IntegratedValueFunction{T<:Real}<:AbstractValueFunction
+immutable IntegratedValueFunction{T<:Real, Tm<:AbstractMatrix}<:AbstractValueFunction
     Vᵏ⁺¹::Vector{T}
     Vᵏ::Vector{T}
-    βFP::Matrix{T}
+    βFP::Tm
     βEV::Vector{Vector{T}}
     maximum::Vector{T}
 end
 IntegratedValueFunction(nX, nA, T=Float64) = IntegratedValueFunction(zeros(T, nX), zeros(T, nX), zeros(T, nX, nX), [zeros(T, nX) for i = 1:nA], [zero(T),])
-IntegratedValueFunction(S) = IntegratedValueFunction(S.nX, length(S.F))
+function IntegratedValueFunction(S::AbstractState, T=Float64)
+    nX, nA = S.nX, length(S.F)
+    βFP = similar(S.F[1])
+    IntegratedValueFunction(zeros(T, nX), zeros(T, nX), βFP, [zeros(T, nX) for i = 1:nA], [zero(T),])
+end
 get_maximum!(V::AbstractValueFunction) = copy!(V.maximum, maximum(V.Vᵏ))
 size(V::IntegratedValueFunction) = size(V.Vᵏ)
 

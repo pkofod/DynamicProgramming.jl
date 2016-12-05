@@ -63,7 +63,8 @@ function solve!(U, S, V, method::Newton; tol = 1e-10, verbose = false)
         _supnorm = supnorm(V)
         newton!(U, S, V, method.d)
         verbose && @printf("Newton i: %i   reltol: %0.5e    tol1: %0.5e\n", i, supnorm(V)/_supnorm, supnorm(V))
-        supnorm(V) < method.tol && return i
+        is_close(previous(V), current(V), tol, tol) && return i
+        # supnorm(V) < method.tol && return i
         i == method.maximum_iter && return i
     end
     i

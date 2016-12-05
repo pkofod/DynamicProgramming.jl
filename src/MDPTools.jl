@@ -33,6 +33,23 @@ Ac_mul_B!{T<:BlasFloat}(α::T, A::StridedMatrix{T}, x::StridedVector{T}, β::T, 
 # Fallback for other types of matrices
 A_mul_B!(α, A, x, β, y) = copy!(y, β*y+α*(A*x))
 
+function is_close(a, b, rel_tol, abs_tol)
+    (isinf(a) || isinf(b)) && return false
+    a_less_b = abs(a-b)
+    a_less_b <= abs(rel_tol*b) || a_less_b <= abs(rel_tol*a) || a_less_b < abs_tol
+end
+
+function is_close(A::AbstractVector, B, rel_tol, abs_tol)
+    close = true
+    i = 1
+    while close && i<=length(A)
+        i_close = is_close(A[i], B[i], rel_tol, abs_tol)
+        close *= i_close
+        i+=1
+    end
+    close
+end
+
 # types
 include("types/utility.jl")
 include("types/states.jl")
