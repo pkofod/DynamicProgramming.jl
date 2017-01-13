@@ -2,7 +2,7 @@ abstract AbstractUtility
 type LinearUtility{T<:Real} <: AbstractUtility
     Z::Vector{Matrix{T}}
     β::T
-    θ::Vector{T}
+    Θ::Vector{T}
     U::Vector{Vector{T}}
     P::Vector{Vector{T}}
     nvar::Int64
@@ -17,9 +17,9 @@ function LinearUtility{T<:Real}(Z::Vector{Vector{T}}, β::T)
                         [zeros(T, nrow) for i = 1:length(Z)], ncol)
 end
 
-function LinearUtility{T<:Real}(Z, β::T, θ::Vector{T})
-    U = [Z[i]*θ for i in 1:length(Z)]
+function LinearUtility{T<:Real}(Z, β::T, Θ::Vector{T})
+    U = [Z[i]*Θ for i in 1:length(Z)]
     P = [zeros(T, size(Z[iA], 1)) for iA = 1:length(Z)]
 
-    LinearUtility(Z, β, θ, U, P, size(Z[1], 2))
+    LinearUtility(Z, β, Θ, U, P, size(Z[1], 2))
 end

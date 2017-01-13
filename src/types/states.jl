@@ -12,7 +12,9 @@ DiscreteState(X::AbstractVector, F::AbstractVector) = DiscreteState(X, F, length
 
 # Helpers
 State(X::AbstractVector, F::AbstractVector) = DiscreteState(X, F)
-EntryState() = State([0.;1.],[[1. 0.; 1. 0.], [0. 1.; 0. 1.]])
+EntryState(;dense=true) = State([0.;1.],
+                                  dense ? [sparse([1. 0.; 1. 0.]), sparse([0. 1.; 0. 1.])]:
+                                           [[1. 0.; 1. 0.], [0. 1.; 0. 1.]])
 
 # Exogenous states that are common to all agents
 type CommonState{Ta <: AbstractMatrix} <: AbstractState

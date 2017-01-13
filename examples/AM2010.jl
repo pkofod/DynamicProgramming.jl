@@ -4,8 +4,7 @@ function am(;N = 5, β = 0.95)
 	# 2 Model
 	truepar = [-1.9;1.;2.] # fixed costs, ..., entry costs
 	# State 1: Exogenous state
-	nX1 = 2
-	X1 = [0.;1.]
+	X1 = [0;1] # 0 signifies exit and 1 is entry
 	F1 = [sparse([1. 0.; 1. 0.]), sparse([0. 1.; 0. 1.])]
 
 	nX2 = N
@@ -19,10 +18,10 @@ function am(;N = 5, β = 0.95)
 	S = States(State(X1, F1),
 	           CommonState(X2, M))
 
-	Z0 = zeros(nX2*2, 3) # don't buy
-	Z2 = [-ones(nX2) log(X2) -ones(nX2)] # buy 2
-	Z5 = [-ones(nX2) log(X2)  zeros(nX2)] # buy 5
-	Z = [Z0, Z2, Z5]
+	Z1 = zeros(nX2*2, 3) # exit
+	Z2 = [-ones(nX2) log(X2) -ones(nX2);# enter
+	      -ones(nX2) log(X2)  zeros(nX2)] # buy 5
+	Z = [Z1, Z2]
 
 	U = LinearUtility(Z, β, truepar)
 

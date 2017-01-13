@@ -1,5 +1,5 @@
-using BenchmarkTools, ProgressMeter
-cd(Pkg.dir("MDPTools")*"/src/examples/")
+using BenchmarkTools, ProgressMeter, MDPTools
+cd(Pkg.dir("MDPTools")*"/examples/")
 function add_model!(m, s)
     f = include(s)
     push!(m, f)
@@ -15,13 +15,12 @@ run(`clear`)
 method_text = ["VFI   ", "Newton", "Poly  "]
 @showprogress 1 "Benchmarking..." for m in models
     U, S = m()
-    vfi = VFI()
-    IV_VFI = @benchmark solve($U, $S, $vfi)
-    EV_VFI = @benchmark solve($U, $S, ExpectedValueFunction($S.nX, length($U.U)), $vfi)
+    IV_VFI = @benchmark solve($U, $S, VFI())
+    EV_VFI = @benchmark solve!($U, $S, ExpectedValueFunction($S.nX, length($U.U)), VFI())
     IV_Newton = @benchmark solve($U, $S, Newton())
-    EV_Newton = @benchmark solve($U, $S, ExpectedValueFunction($S.nX, length($U.U)), Newton())
+    EV_Newton = @benchmark solve!($U, $S, ExpectedValueFunction($S.nX, length($U.U)), Newton())
     IV_Poly = @benchmark solve($U, $S, Poly())
-    EV_Poly = @benchmark solve($U, $S, ExpectedValueFunction($S.nX, length($U.U)), Poly())
+    EV_Poly = @benchmark solve!($U, $S, ExpectedValueFunction($S.nX, length($U.U)), Poly())
 #    IV_best = method_text[indmin((minimum(IV_VFI).time, minimum(IV_Newton).time, minimum(IV_Poly).time))]
 #    EV_best = method_text[indmin((minimum(EV_VFI).time, minimum(EV_Newton).time, minimum(EV_Poly).time))]
     @printf "Dimension of state space %i\n" S.nX
