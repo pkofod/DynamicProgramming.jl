@@ -35,14 +35,13 @@ Poly() = Poly(1e-10, 10, 1e-10, 5, 1e-10, 10, 1e-10, 10, 0.5)
 # vfi
 # policy
 # end
-function solve(U, S, method=Poly(); verbose = false)
+function solve!(U, S, M::SolutionMethod=Poly(); verbose = false)
     V = IntegratedValueFunction(S.nX, length(U.U))
-    ret = solve!(U, S, V, method; verbose = verbose)
+    ret = solve!(U, S, V, M; verbose = verbose)
     return V, ret
 end
-solve(U, S, M::SolutionMethod; verbose = false) = solve!(U, S, IntegratedValueFunction(S.nX, length(U.U)), M; verbose = verbose)
 
-function solve!(U, S, V, method::VFI; verbose = false)
+function solve!(U, S, V::AbstractValueFunction, method::VFI; verbose = false)
     for i = 1:method.maximum_iter
         _supnorm = supnorm(V)
         bellman!(U.U, S.F, U.β, V)

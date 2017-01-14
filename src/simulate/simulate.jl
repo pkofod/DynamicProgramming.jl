@@ -67,7 +67,7 @@ end
 
 # TODO populate x, and remove ds
 function simulate(U::AbstractUtility, X, M, N, T; max_iterations = 10_000)
-    V, iter = solve(U, X, Poly())
+    V, iter = solve!(U, X, Poly())
     p0 = stationary(policy(U), X.F, max_iterations = max_iterations) #API solP into CCP(::sol)
     ds = [simulate(policy(U), X, N, T, p0)...  ones(Int64, N*T)]
     if M > 1
@@ -81,7 +81,7 @@ end
 function simulate(U::AbstractUtility, X, M, N, T, p0)
     sum(p0) == 1.0 || throw(error("Initial distribution did not sum to $(sum(p0)), not 1.0."))
     length(p0) == X.nX || throw(error("Initial distribution was of different dimension ($(length(p0))) than the state space ($(X.nX))."))
-    V, iter = solve(U, X)
+    V, iter = solve!(U, X)
     simulate(policy(U), X, M, N, T, p0)
 end
 
