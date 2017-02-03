@@ -1,4 +1,8 @@
 abstract AbstractValueFunction
+ᵏ⁺¹() = nothing
+nexttype = typeof(ᵏ⁺¹)
+import Base.*
+*(V::AbstractValueFunction, f::nexttype) = V.Vᵏ⁺¹
 maximum(AVF::AbstractValueFunction) = AVF.maximum[1]
 
 # Actual value function

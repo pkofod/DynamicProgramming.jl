@@ -17,7 +17,7 @@ export  State, States,
         # Solution algorithms
         VFI, Policy, Newton, Poly,
         # Solution relation functions
-        bellman!, newton!, solve, solve!,
+        bellman!, newton!, policy!, solve, solve!,
         # Simulation function and Data type for output
         simulate, Data,
         # Module with extras
@@ -59,6 +59,7 @@ include("types/valuefunctions.jl")
 include("solution/misc.jl")
 include("solution/bellman.jl")
 include("solution/newton.jl")
+include("solution/policy.jl")
 include("solution/solve.jl")
 
 # data

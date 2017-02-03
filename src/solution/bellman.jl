@@ -5,7 +5,7 @@ Applies the Bellman operator. Uses the previous value function to generate
 a new value function in-place.
 """
 function bellman!(U, F, β, V::ValueFunction)
-    copy!(V.Vᵏ,V.Vᵏ⁺¹)
+    copy!(previous(V),current(V))
     βEV!(β, F, V)
     V.Vᵏ⁺¹ .= max([U[i] + V.βEV[i] for i = 1:length(U)]...)
     supnorm(V)

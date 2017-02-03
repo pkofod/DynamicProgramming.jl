@@ -8,7 +8,7 @@
 
 MDPTools is a package for solving discrete choice models often used in
 economics. Currently, the package supports discrete and finite state spaces and
-multinomial choice. See [Aguirregabiria and Mira (2010)](http://www.sciencedirect.com/science/article/pii/S0304407609001985)
+multinomial choice with linear in parameters utility functions. See [Aguirregabiria and Mira (2010)](http://www.sciencedirect.com/science/article/pii/S0304407609001985)
 for a survey of the models this package is intended to handle. Standard methods
 such as value function iterations (successive approximations), and policy/newton
 iterations are implemented.

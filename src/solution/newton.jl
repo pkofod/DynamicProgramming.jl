@@ -1,13 +1,3 @@
-function βFP!(V, β, P, F)
-    V.βFP .= sum(β*P[ia].*F[ia] for ia = 1:length(P))
-end
-
-function βFP!(EV::ExpectedValueFunction, P, β, F)
-    for ia = 1:length(F)
-        EV.βFP[ia] .= β*P[ia].*F[ia]
-    end
-end
-
 newton!(U, S, V::AbstractValueFunction, d) = newton!(U.U, U.β, U.P, S.F, V, d)
 function newton!(U, β, P, F, V::AbstractValueFunction, d)
     bellman!(U, F, β, V)

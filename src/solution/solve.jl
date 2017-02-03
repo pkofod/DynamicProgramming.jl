@@ -35,13 +35,13 @@ Poly() = Poly(1e-10, 10, 1e-10, 5, 1e-10, 10, 1e-10, 10, 0.5)
 # vfi
 # policy
 # end
-function solve!(U, S, M::SolutionMethod=Poly(); verbose = false)
+function solve!(U, S, M::SolutionMethod=Poly(); verbose::Bool = false)
     V = IntegratedValueFunction(S.nX, length(U.U))
     ret = solve!(U, S, V, M; verbose = verbose)
     return V, ret
 end
 
-function solve!(U, S, V::AbstractValueFunction, method::VFI; verbose = false)
+function solve!(U, S, V::AbstractValueFunction, method::VFI; verbose::Bool = false)
     for i = 1:method.maximum_iter
         _supnorm = supnorm(V)
         bellman!(U.U, S.F, U.β, V)
@@ -55,9 +55,9 @@ function solve!(U, S, V::AbstractValueFunction, method::VFI; verbose = false)
         end
     end
 end
-solve!(U, S, V; verbose = false) = solve!(U, S, V, VFI(); verbose = verbose)
+solve!(U, S, V; verbose::Bool = false) = solve!(U, S, V, VFI(); verbose = verbose)
 
-function solve!(U, S, V, method::Newton; tol = 1e-10, verbose = false)
+function solve!(U, S, V, method::Newton; tol = 1e-10, verbose::Bool = false)
     for i = 1:method.maximum_iter
         _supnorm = supnorm(V)
         newton!(U, S, V, method.d)
@@ -70,7 +70,7 @@ function solve!(U, S, V, method::Newton; tol = 1e-10, verbose = false)
 end
 
 # This is currently not "correct".
-function solve!(U, S, V, method::Poly; verbose = false)
+function solve!(U, S, V, method::Poly; verbose::Bool = false)
     vfi = VFI(method.tol_vfi, method.maximum_vfi)
     newton = Newton(method.tol_newton, method.maximum_newton, method.d)
     i_vfi, i_newton, i_poly = 0, 0, 0

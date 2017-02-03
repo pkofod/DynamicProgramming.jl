@@ -29,7 +29,23 @@ function βEV!{T<:Real}(β::T, F, EV::ExpectedValueFunction)
     end
     mapreduce(maximum, max, EV.EVᵏ)
 end
+
 """
+    βFP!(V, β, P, F)
+Calculates the discounted unconditional transition probabilities induced by P.
+"""
+function βFP!(V, β, P, F)
+    V.βFP .= sum(β*P[ia].*F[ia] for ia = 1:length(P))
+end
+function βFP!(EV::ExpectedValueFunction, P, β, F)
+    for ia = 1:length(F)
+        EV.βFP[ia] .= β*P[ia].*F[ia]
+    end
+end
+
+
+"""
+    P!(args...)
 Updates the choice probabilities given the provided value function.
 """
 P!(U, F, V) = P!(U.P, U.U, U.β, F, V)
