@@ -1,4 +1,4 @@
-#using MDPTools
+using MDPTools
 function am(;N = 5, β = 0.95)
 	# Aguirregabiria & Mira
 	# 2 Model
@@ -16,7 +16,7 @@ function am(;N = 5, β = 0.95)
 	M[2:end-1, :] = vcat([vcat(zeros(i-2), p, zeros(nX2-1-i))' for i = 2:nX2-1]...)
 
 	S = States(State(X1, F1),
-	           CommonState(X2, M))
+	           CommonState("market demand", X2, M))
 
 	Z1 = zeros(nX2*2, 3) # exit
 	Z2 = [-ones(nX2) log(X2) -ones(nX2);# enter
@@ -27,4 +27,5 @@ function am(;N = 5, β = 0.95)
 
     return U, S
 end
-#solve(am()...)
+U, S = am()
+solve!(U, S)

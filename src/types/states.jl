@@ -17,10 +17,10 @@ State(name, X::AbstractVector, F::AbstractVector) = DiscreteState(name, X, F, le
 State(X::AbstractVector, F::AbstractVector) = DiscreteState(X, F)
 EntryState(;dense=true) = State("incumbancy", ["don't enter", "enter"],
                                   dense ? [sparse([1. 0.; 1. 0.]), sparse([0. 1.; 0. 1.])]:
-                                           [[1. 0.; 1. 0.], [0. 1.; 0. 1.]], 2)
+                                           [[1. 0.; 1. 0.], [0. 1.; 0. 1.]])
 
 # Exogenous states that are common to all agents
-type CommonState{Ta <: AbstractMatrix, Tn<:AbstractString} <: AbstractState
+type CommonState{Ta <: AbstractMatrix, Tn<:Union{AbstractString, Void}} <: AbstractState
     name::Tn
     X::AbstractVector
     F::Vector{Ta}
@@ -87,14 +87,11 @@ get_F(state::CommonState, ia) = state.F[1]
 # Helper function
 States(states::Union{DiscreteState, CommonState}...) = DiscreteStates(nothing, states...)
 
-#
-
 # No-op States "constructor"
 States(S::DiscreteStates) = S
 
 names(S::AbstractState) = S.names
 names(S::Union{CommonState, DiscreteState}) = S.name
-
 
 function Base.display(S::DiscreteStates)
     @printf "Discrete states\n"

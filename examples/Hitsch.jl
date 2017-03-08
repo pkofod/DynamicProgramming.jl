@@ -1,3 +1,4 @@
+using MDPTools
 function hitsch(;N = 20)
     n = [0, 2, 5]
     next_i(i, k) = max(0, min(I, i+n[k]-1))
@@ -21,6 +22,8 @@ function hitsch(;N = 20)
           [zeros(1); ones(I)] zeros(I+1) -next_i(0:I, 1)]
     Z2 = [ones(2*(I+1)) -[1.2*ones(I+1);2*ones(I+1)] -kron(ones(2), next_i(0:I, 2))]
     Z3 = [ones(2*(I+1)) -[3.0*ones(I+1);5*ones(I+1)] -kron(ones(2), next_i(0:I, 3))]
-    U = LinearUtility([Z1, Z2, Z3], 0.998, [delta; alpha; 0.05], ["Buy 0", "Buy 2", "Buy 5"])
+    U = LinearUtility(["Buy 0", "Buy 2", "Buy 5"], [Z1, Z2, Z3], 0.998, [delta; alpha; 0.05])
     return U, S
 end
+U, S = hitsch()
+V, iter = solve!(U, S)<s

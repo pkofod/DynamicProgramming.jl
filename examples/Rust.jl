@@ -1,3 +1,4 @@
+using MDPTools
 function rust(;N = 175, β = 0.95, sparse = false)
     # State space
     nX = N
@@ -21,7 +22,9 @@ function rust(;N = 175, β = 0.95, sparse = false)
     Z1 = [zeros(nX) -0.001*X]
     Z2 = [-ones(nX) zeros(nX)]
 
-    U = LinearUtility([Z1, Z2], β, [11.;2.5])
+    U = LinearUtility(["repair", "replace"], [Z1, Z2], β, [11.;2.5])
 
     return U, S
 end
+U, S = rust()
+V, iter = solve!(U, S)

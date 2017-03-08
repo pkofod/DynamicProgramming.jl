@@ -1,3 +1,4 @@
+using MDPTools
 function dixit(;N = 5, β = 0.99)
     # State 1
     X1 = 0:1
@@ -8,7 +9,8 @@ function dixit(;N = 5, β = 0.99)
     F2 = 1./(1+abs(ones(length(X2),1)*X2'-X2*ones(1, length(X2))))
     F2 = F2./sum(F2,1)'
     # States
-    S = States(State("incumbancy", X1, F1), CommonState(:market, X2, F2))
+    S = States(EntryState(),
+               CommonState("market demand", X2, F2))
 
     # Utility variables
     Z1 = zeros(nX2*2, 3)
@@ -18,3 +20,5 @@ function dixit(;N = 5, β = 0.99)
 
     return U, S
 end
+U, S = dixit()
+solve!(U, S)
