@@ -4,7 +4,6 @@
 
 module Stocas
 using StatsFuns, Distributions, RecipesBase
-
         # Generic state(s)
 export  State, States,
         # Discrete state(s)
@@ -16,13 +15,12 @@ export  State, States,
         # Different value functions
         ValueFunction, IntegratedValueFunction, ExpectedValueFunction,
         # Solution algorithms
-        VFI, Policy, Newton, Poly,
+        # don't export as they might conflict
+        #VFI, Policy, Newton, Poly,
         # Solution relation functions
         bellman!, newton!, policy!, solve, solve!,
         # Simulation function and Data type for output
-        simulate, Data,
-        # Module with extras
-        Extras
+        simulate, Data
 
 # Import here so we can extend them later
 import Base: maximum, size, display, names
@@ -72,7 +70,4 @@ include("simulate/simulate.jl")
 
 # plots recipes
 include("plots.jl")
-
-# misc
-include("Extras.jl")
 end # module

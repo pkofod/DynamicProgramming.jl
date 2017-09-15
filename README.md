@@ -17,12 +17,8 @@ Note that for the extreme value shocks we use shocks with means normalized to ze
 
 ![example](https://cloud.githubusercontent.com/assets/8431156/20754243/5360d216-b70a-11e6-906d-9eab9ed04d22.png)
 
-The package is still in development. Things like continuous states, speed improvements
-from providing additional structure (regenerative actions, ...), and relative value function
-iterations are to be implemented in the future.
-
 This package can be used on its own, but is meant to be a backend for estimation
 packages yet to be announced: NestedFixedPoint.jl, NestedPseudoLikelihood.jl, MPEC.jl,
-and a meta package to reexport this and the other packages called StructuralEstimation.jl.
+and a meta package to reexport this and the other packages called StocasEstimators.jl.
 
 This package is still in active development. Things will change.

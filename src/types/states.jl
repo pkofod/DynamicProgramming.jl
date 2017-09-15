@@ -3,11 +3,11 @@ abstract type AbstractState end
 """
 Represents a discrete, finite state variable.
 """
-type DiscreteState{Ta <: AbstractMatrix, Tn<:Any} <: AbstractState
+struct DiscreteState{Tn, Tx, Ta} <: AbstractState
     name::Tn
-    X::AbstractVector
-    F::Vector{Ta}
-    nX::Int64
+    X::Tx
+    F::Ta
+    nX::Int
 end
 DiscreteState(X::AbstractVector, F::AbstractVector) = DiscreteState("state", X, F, length(X))
 DiscreteState(name, X::AbstractVector, F::AbstractVector) = DiscreteState(name, X, F, length(X))
@@ -15,22 +15,28 @@ DiscreteState(name, X::AbstractVector, F::AbstractVector) = DiscreteState(name, 
 # Helpers
 State(name, X::AbstractVector, F::AbstractVector) = DiscreteState(name, X, F, length(X))
 State(X::AbstractVector, F::AbstractVector) = DiscreteState(X, F)
+"""
+    EntryState(;dense=true)
+Construct a binary state with the name "incumbancy" and actions "don't enter" and
+"enter". The `dense` keyword specifies if transition matrices should be dense or
+sparse.
+"""
 EntryState(;dense=true) = State("incumbancy", ["don't enter", "enter"],
                                   dense ? [sparse([1. 0.; 1. 0.]), sparse([0. 1.; 0. 1.])]:
                                            [[1. 0.; 1. 0.], [0. 1.; 0. 1.]])
 
 # Exogenous states that are common to all agents
-type CommonState{Ta <: AbstractMatrix, Tn<:AbstractString} <: AbstractState
+struct CommonState{Tn, Tx, Ta} <: AbstractState
     name::Tn
-    X::AbstractVector
-    F::Vector{Ta}
-    nX::Int64
+    X::Tx
+    F::Ta
+    nX::Int
 end
 CommonState(X, F) = CommonState("common state", X, [F,], length(X))
 CommonState(name, X, F) = CommonState(name, X, [F,], length(X))
 
 # The multivariate version of the individual states
-type DiscreteStates{Tm <: AbstractMatrix} <: AbstractState
+struct DiscreteStates{Tm <: AbstractMatrix} <: AbstractState
     names::Vector
     val_to_ind::Dict
     ind_to_val::Dict
@@ -74,23 +80,37 @@ function DiscreteStates(states::Union{DiscreteState, CommonState}...)
     DiscreteStates(names, val_to_ind, ind_to_val, Vector[state.X for state in states], Fs, F, n, tup, ind_market)
 end
 
+"""
+    get_F(S, ia)
+Return the `ia`th transition matrix where `ia` is the index of a choice.
+"""
 get_F(state::AbstractState, ia) = state.F[ia]
 get_F(state::CommonState, ia) = state.F[1]
 
 States(S::Union{DiscreteState, CommonState}...) = DiscreteStates(S...)
+
 # No-op States "constructor"
 States(S::DiscreteStates) = S
 
+"""
+    names(S) where S<:AbstractState
+Return the names of the state(s) in S.
+"""
 names(S::AbstractState) = S.names
 names(S::Union{CommonState, DiscreteState}) = S.name
 
-
+# display methods
 function Base.display(S::DiscreteStates)
     @printf "Discrete states\n"
     @printf " * Number of state variables: %s\n" length(S.tup)
     @printf " * Total number of states:    %s\n" S.nX
     @printf " * Individual states:           \n"
     for ix = 1:length(S.X)
-        @printf "  %d) %s (n: %s)\n" ix S.names[ix] length(S.X[ix])
+        @printf "   %d) %s (n: %s)\n" ix S.names[ix] length(S.X[ix])
     end
+end
+function Base.display(S::DiscreteState)
+    @printf "Discrete state\n"
+    @printf " * name: %s\n" S.name
+    @printf " * n: %s\n" length(S.X)
 end

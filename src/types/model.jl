@@ -1,7 +1,7 @@
 abstract type Horizon end
-immutable InifiniteHorizon
+struct InifiniteHorizon
 end
-immutable FiniteHorizon
+struct FiniteHorizon
     T
 end
 type DCModel{H<:Horizon}

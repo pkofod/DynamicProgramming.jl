@@ -79,8 +79,8 @@ function P!(P, U, β, F, V)
 end
 
 P!(U, EV) = P!(U.P, U.U, U.β, EV)
-P!{Tm<:AbstractVector}(P, U::Vector, β::Real, EV::Vector{Tm}) = P!(P, U, map(ev->β*ev,EV))
-function P!{Tm<:AbstractVector}(P, U::Vector, βEV::Vector{Tm})
+P!{Tm<:AbstractVector}(P, U::NTuple, β::Real, EV::Vector{Tm}) = P!(P, U, map(ev->β*ev,EV))
+function P!{Tm<:AbstractVector}(P, U::NTuple, βEV::Vector{Tm})
     if length(P) == 2
         P[1][:] = 1./(1 + exp.(U[2] + βEV[2] - (U[1] + βEV[1])))
         P[2][:] = 1 - P[1]

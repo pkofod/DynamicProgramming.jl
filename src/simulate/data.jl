@@ -1,4 +1,4 @@
-immutable Data{T<:Integer}
+struct Data{T<:Integer}
     id::Vector{T} # Agent IDs
     a::Vector{T} # Choices
     aj::Vector{Vector{T}}
@@ -10,6 +10,7 @@ immutable Data{T<:Integer}
     #Y::PayoffVariable
     nobs::T # Number of observations
 end
+
 function get_xᵈ_nxjᵈ(a, x, J)
     xᵈ = sort(unique(x))
     nxᵈ = length(xᵈ)
@@ -46,6 +47,6 @@ end
 function Base.display(data::Data)
     @printf "Data instance with\n"
     @printf "* %i agents\n" length(unique(data.id))
-    @printf "* %i observations\n" data.nobs
     @printf "* %i group(s)\n" length(unique(data.m))
+    @printf "* %i observations total\n" data.nobs
 end

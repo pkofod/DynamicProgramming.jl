@@ -1,5 +1,5 @@
 abstract type SolutionMethod end
-immutable VFI <: SolutionMethod
+struct VFI <: SolutionMethod
     tol
     maxiter::Int
     verbose::Bool
@@ -7,7 +7,7 @@ end
 VFI(;maxiter=50_000) = VFI(1e-10, maxiter, false)
 VFI(tol, maxiter) = VFI(tol, maxiter, false)
 
-immutable Newton <: SolutionMethod
+struct Newton <: SolutionMethod
     tol
     maxiter::Int
     d
@@ -15,14 +15,14 @@ immutable Newton <: SolutionMethod
 end
 Newton() = Newton(1e-10,10, 0.5, false)
 Newton(tol, maxiter, d) = Newton(tol, maxiter, d, false)
-immutable Policy <: SolutionMethod
+struct Policy <: SolutionMethod
     tol
     maxiter::Int
     verbose::Bool
 end
 Policy() = Policy(1e-10, 10, false)
 Policy(tol, maxiter) = Policy(tol, maxiter, false)
-immutable Poly <: SolutionMethod
+struct Poly <: SolutionMethod
     tol_vfi
     maximum_vfi
     tol_policy
@@ -38,13 +38,14 @@ Poly() = Poly(1e-10, 10, 1e-10, 5, 1e-10, 10, 1e-10, 10, 0.5, false)
 Poly(vfitol, maxvfi, policytol, maxpolicy, newtontol, maxnewton,polytol, maxpoly, d) =
 Poly(vfitol, maxvfi, policytol, maxpolicy, newtontol, maxnewton,polytol, maxpoly, d, false)
 # should have
-# immutable Poly
+#  Poly
 # vfi
 # policy
 # end
-function solve!(U, S, M::SolutionMethod=Poly())
+solve(U, S, method::SolutionMethod=Poly()) = solve!(U, S, method)
+function solve!(U, S, method::SolutionMethod=Poly())
     V = IntegratedValueFunction(S.nX, length(U.U))
-    ret = solve!(U, S, V, M)
+    ret = solve!(U, S, V, method)
     return V, ret
 end
 
